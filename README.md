@@ -1,4 +1,3 @@
-# AMazon_ML_CHallenge
 # ML Challenge Problem Statement
 
 ## Feature Extraction from Images
