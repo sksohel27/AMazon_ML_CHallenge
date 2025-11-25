@@ -1,75 +1,72 @@
-# ML Challenge Problem Statement
+# ML Challenge: Feature Extraction from Images
 
-## Feature Extraction from Images
+In this hackathon, the goal is to create a machine learning model that extracts entity values from product images. This capability is crucial in fields like **healthcare**, **e-commerce**, and **content moderation**, where precise product information is vital. As digital marketplaces expand, many products lack detailed textual descriptions, making it essential to obtain key details directly from images. These images provide important information such as weight, volume, voltage, wattage, dimensions, and more—critical for digital stores.
 
-In this hackathon, the goal is to create a machine learning model that extracts entity values from images. This capability is crucial in fields like healthcare, e-commerce, and content moderation, where precise product information is vital. As digital marketplaces expand, many products lack detailed textual descriptions, making it essential to obtain key details directly from images. These images provide important information such as weight, volume, voltage, wattage, dimensions, and many more, which are critical for digital stores.
+## Data Description
 
-### Data Description: 
+The dataset consists of the following columns:
 
-The dataset consists of the following columns: 
+| Column          | Description                                                                 |
+|-----------------|-----------------------------------------------------------------------------|
+| **index**       | Unique identifier (ID) for the data sample.                                 |
+| **image_link**  | Public URL where the product image is available for download. <br/> *Example:* `https://m.media-amazon.com/images/I/71XfHPR36-L.jpg` <br/> *Tip:* Use the `download_images` function from `src/utils.py` to download images (see sample code in `src/test.ipynb`). |
+| **group_id**    | Category code of the product.                                               |
+| **entity_name** | Product entity name (e.g., “item_weight”).                                  |
+| **entity_value**| Product entity value (e.g., “34 gram”). <br/> *Note:* This column is absent in `test.csv` as it is the target variable. |
 
-1. **index:** An unique identifier (ID) for the data sample
-2. **image_link**: Public URL where the product image is available for download. Example link - https://m.media-amazon.com/images/I/71XfHPR36-L.jpg
-    To download images use `download_images` function from `src/utils.py`. See sample code in `src/test.ipynb`.
-3. **group_id**: Category code of the product
-4. **entity_name:** Product entity name. For eg: “item_weight” 
-5. **entity_value:** Product entity value. For eg: “34 gram” 
-    Note: For test.csv, you will not see the column `entity_value` as it is the target variable.
+## Output Format
 
-### Output Format:
+The output file should be a CSV with **2 columns**:
 
-The output file should be a csv with 2 columns:
+| Column      | Description                                                                 |
+|-------------|-----------------------------------------------------------------------------|
+| **index**   | The unique identifier (ID) of the data sample. Must match the test record index. |
+| **prediction** | A string in the format: `“x unit”` where:<br/>- `x` is a float number in standard formatting.<br/>- `unit` is one of the allowed units (see Appendix).<br/>- The two values are concatenated with a single space.<br/> <br/>**Valid examples:**<br/>- “2 gram”<br/>- “12.5 centimetre”<br/>- “2.56 ounce”<br/> <br/>**Invalid examples:**<br/>- “2 gms”<br/>- “60 ounce/1.7 kilogram”<br/>- “2.2e2 kilogram”<br/> <br/>*Notes:* <br/>- Output a prediction for **all** indices.<br/>- If no value is found, return an empty string: `“”`.<br/>- Ensure the exact number of output samples matches `test.csv`; otherwise, it won’t be evaluated. |
 
-1. **index:** The unique identifier (ID) of the data sample. Note the index should match the test record index.
-2. **prediction:** A string which should have the following format: “x unit” where x is a float number in standard formatting and unit is one of the allowed units (allowed units are mentioned in the Appendix). The two values should be concatenated and have a space between them. For eg: “2 gram”, “12.5 centimetre”, “2.56 ounce” are valid. Few invalid cases: “2 gms”, “60 ounce/1.7 kilogram”, “2.2e2 kilogram” etc.
-    Note: Make sure to output a prediction for all indices. If no value is found in the image for any test sample, return empty string, i.e, `“”`. If you have less/more number of output samples in the output file as compared to test.csv, your output won’t be evaluated. 
+## File Descriptions
 
-### File Descriptions:
+### Source Files
+- **`src/sanity.py`**: Sanity checker to ensure the final output file passes all formatting checks. <br/>*Note:* This script does **not** check if the number of predictions matches the test file. See sample code in `src/test.ipynb`.
+- **`src/utils.py`**: Helper functions for downloading images from `image_link`.
+- **`src/constants.py`**: Contains the allowed units for each entity type.
+- **`sample_code.py`**: Optional sample dummy code to generate an output file in the required format.
 
-*source files*
+### Dataset Files
+- **`dataset/train.csv`**: Training file with labels (`entity_value`).
+- **`dataset/test.csv`**: Test file without labels (`entity_value`). Generate predictions here and format to match `sample_test_out.csv`.
+- **`dataset/sample_test.csv`**: Sample test input file.
+- **`dataset/sample_test_out.csv`**: Sample outputs for `sample_test.csv`. <br/>*Note:* Predictions in this file may not be accurate; focus on formatting.
 
-1. **src/sanity.py**: Sanity checker to ensure that the final output file passes all formatting checks. Note: the script will not check if less/more number of predictions are present compared to the test file. See sample code in `src/test.ipynb` 
-2. **src/utils.py**: Contains helper functions for downloading images from the image_link.
-3. **src/constants.py:** Contains the allowed units for each entity type.
-4. **sample_code.py:** We also provided a sample dummy code that can generate an output file in the given format. Usage of this file is optional. 
+## Constraints
+1. Use the provided sample output file and `sanity.py` to validate formatting. Your output must match `sample_test_out.csv` exactly. <br/>*Success message:* `Parsing successful for file: ...csv`. <br/>*Warning:* Files failing sanity checks will **not** be evaluated.
+2. Outputs must use **only** allowed units from `constants.py` (also in Appendix). Other units will be invalid.
 
-*Dataset files*
+## Evaluation Criteria
 
-1. **dataset/train.csv**: Training file with labels (`entity_value`).
-2. **dataset/test.csv**: Test file without output labels (`entity_value`). Generate predictions using your model/solution on this file's data and format the output file to match sample_test_out.csv (Refer the above section "Output Format")
-3. **dataset/sample_test.csv**: Sample test input file.
-4. **dataset/sample_test_out.csv**: Sample outputs for sample_test.csv. The output for test.csv must be formatted in the exact same way. Note: The predictions in the file might not be correct
+Submissions are evaluated using the **F1 score**, a standard measure for prediction accuracy in classification and extraction tasks.
 
-### Constraints
+Let **GT** = Ground truth value and **OUT** = Model prediction for a sample. Predictions are classified as:
 
-1. You will be provided with a sample output file and a sanity checker file. Format your output to match the sample output file exactly and pass it through the sanity checker to ensure its validity. Note: If the file does not pass through the sanity checker, it will not be evaluated. You should recieve a message like `Parsing successfull for file: ...csv` if the output file is correctly formatted.
+| Class                  | Condition                                      |
+|------------------------|------------------------------------------------|
+| **True Positives (TP)**| OUT ≠ `""` and GT ≠ `""` and OUT == GT        |
+| **False Positives (FP)**| OUT ≠ `""` and GT ≠ `""` and OUT ≠ GT         |
+| **False Positives (FP)**| OUT ≠ `""` and GT == `""`                     |
+| **False Negatives (FN)**| OUT == `""` and GT ≠ `""`                     |
+| **True Negatives (TN)**| OUT == `""` and GT == `""`                    |
 
-2. You are given the list of allowed units in constants.py and also in Appendix. Your outputs must be in these units. Predictions using any other units will be considered invalid during validation.
+**F1 Score** = \( 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} \)
 
-### Evaluation Criteria
+Where:
+- **Precision** = \( \frac{TP}{TP + FP} \)
+- **Recall** = \( \frac{TP}{TP + FN} \)
 
-Submissions will be evaluated based on F1 score, which are standard measures of prediction accuracy for classification and extraction problems.
+## Submission File
+Upload `test_out.csv` to the portal with **exact** formatting as `sample_test_out.csv`.
 
-Let GT = Ground truth value for a sample and OUT be output prediction from the model for a sample. Then we classify the predictions into one of the 4 classes with the following logic: 
+## Appendix: Allowed Units
 
-1. *True Positives* - If OUT != `""` and GT != `""` and OUT == GT
-2. *False Positives* - If OUT != `""` and GT != `""` and OUT != GT
-3. *False Positives* - If OUT != `""` and GT == `""`
-4. *False Negatives* - If OUT == `""` and GT != `""`
-5. *True Negatives* - If OUT == `""` and GT == `""` 
-
-Then, F1 score = 2*Precision*Recall/(Precision + Recall) where:
-
-1. Precision = True Positives/(True Positives + False Positives)
-2. Recall = True Positives/(True Positives + False Negatives)
-
-### Submission File
-
-Upload a test_out.csv file in the Portal with the exact same formatting as sample_test_out.csv
-
-### Appendix
-
-```
+```python
 entity_unit_map = {
   "width": {
     "centimetre",
@@ -139,3 +136,7 @@ entity_unit_map = {
   }
 }
 ```
+
+---
+
+*This README has been reformatted for better readability: added tables, bold/italic emphasis, consistent headings, and a clean code block for the appendix. You can copy-paste this directly into your GitHub repo's `README.md` file.*
