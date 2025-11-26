@@ -18,9 +18,9 @@ The dataset consists of the following columns:
 
 The output file should be a CSV with **2 columns**:
 
-| Column      | Description                                                                 |
-|-------------|-----------------------------------------------------------------------------|
-| **index**   | The unique identifier (ID) of the data sample. Must match the test record index. |
+| Column       | Description                                                                 |
+|--------------|-----------------------------------------------------------------------------|
+| **index**    | The unique identifier (ID) of the data sample. Must match the test record index. |
 | **prediction** | A string in the format: `“x unit”` where:<br/>- `x` is a float number in standard formatting.<br/>- `unit` is one of the allowed units (see Appendix).<br/>- The two values are concatenated with a single space.<br/> <br/>**Valid examples:**<br/>- “2 gram”<br/>- “12.5 centimetre”<br/>- “2.56 ounce”<br/> <br/>**Invalid examples:**<br/>- “2 gms”<br/>- “60 ounce/1.7 kilogram”<br/>- “2.2e2 kilogram”<br/> <br/>*Notes:* <br/>- Output a prediction for **all** indices.<br/>- If no value is found, return an empty string: `“”`.<br/>- Ensure the exact number of output samples matches `test.csv`; otherwise, it won’t be evaluated. |
 
 ## File Descriptions
@@ -47,21 +47,23 @@ Submissions are evaluated using the **F1 score**, a standard measure for predict
 
 Let **GT** = Ground truth value and **OUT** = Model prediction for a sample. Predictions are classified as:
 
-| Class                  | Condition                                      |
-|------------------------|------------------------------------------------|
-| **True Positives (TP)**| OUT ≠ `""` and GT ≠ `""` and OUT == GT        |
-| **False Positives (FP)**| OUT ≠ `""` and GT ≠ `""` and OUT ≠ GT         |
-| **False Positives (FP)**| OUT ≠ `""` and GT == `""`                     |
-| **False Negatives (FN)**| OUT == `""` and GT ≠ `""`                     |
-| **True Negatives (TN)**| OUT == `""` and GT == `""`                    |
+| Class                      | Condition                                      |
+|----------------------------|------------------------------------------------|
+| **True Positives (TP)**    | OUT ≠ `""` and GT ≠ `""` and OUT == GT         |
+| **False Positives (FP)**   | OUT ≠ `""` and GT ≠ `""` and OUT ≠ GT          |
+| **False Positives (FP)**   | OUT ≠ `""` and GT == `""`                      |
+| **False Negatives (FN)**   | OUT == `""` and GT ≠ `""`                      |
+| **True Negatives (TN)**    | OUT == `""` and GT == `""`                     |
 
-**F1 Score** = \( 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} \)
+**F1 Score** = 2 * (Precision * Recall) / (Precision + Recall)
 
 Where:
-- **Precision** = \( \frac{TP}{TP + FP} \)
-- **Recall** = \( \frac{TP}{TP + FN} \)
+
+- **Precision** = TP / (TP + FP)
+- **Recall** = TP / (TP + FN)
 
 ## Submission File
+
 Upload `test_out.csv` to the portal with **exact** formatting as `sample_test_out.csv`.
 
 ## Appendix: Allowed Units
@@ -139,4 +141,4 @@ entity_unit_map = {
 
 ---
 
-*This README has been reformatted for better readability: added tables, bold/italic emphasis, consistent headings, and a clean code block for the appendix. You can copy-paste this directly into your GitHub repo's `README.md` file.*
+*This README has been reformatted for better readability: added tables, bold/italic emphasis, consistent headings, and a clean code block for the appendix. Equations have been converted to plain text for compatibility across all Markdown viewers (no LaTeX required). You can copy-paste this directly into your GitHub repo's `README.md` file.*
